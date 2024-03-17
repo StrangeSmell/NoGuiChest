@@ -1,0 +1,6 @@
+{
+  "block.noguichest.no_gui_chest": "沉浸箱子",
+  "block.noguichest.no_gui_chest_item": "沉浸箱子",
+  "container.NGChest": "沉浸箱子",
+  "container.NGChestDouble": "大型沉浸箱子"
+}

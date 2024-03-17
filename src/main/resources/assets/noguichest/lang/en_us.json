@@ -1,0 +1,6 @@
+{
+  "block.noguichest.no_gui_chest": "no gui chest",
+  "block.noguichest.no_gui_chest_item": "no gui chest",
+  "container.NGChest": "NGChest",
+  "container.NGChestDouble": "Large NGChest"
+}
