@@ -1,0 +1,9 @@
+{
+  "values": [
+    "noguichest:no_gui_ender",
+    "noguichest:no_gui_hopper",
+    "noguichest:no_gui_brew",
+    "noguichest:no_gui_dispenser",
+    "noguichest:no_gui_dropper"
+  ]
+}

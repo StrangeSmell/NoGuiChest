@@ -1,4 +1,4 @@
-package com.strangesmell.noguichest;
+package com.strangesmell.noguichest.chest;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.geom.EntityModelSet;

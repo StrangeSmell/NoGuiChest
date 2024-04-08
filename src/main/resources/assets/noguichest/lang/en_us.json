@@ -1,6 +1,22 @@
 {
   "block.noguichest.no_gui_chest": "no gui chest",
   "block.noguichest.no_gui_chest_item": "no gui chest",
+  "block.noguichest.no_gui_hopper": "no gui hopper",
+  "block.noguichest.no_gui_hopper_item": "no gui hopper",
+  "block.noguichest.no_gui_brew": "no gui Brewing Stand",
+  "block.noguichest.no_gui_brew_item": "no gui Brewing Stand",
+  "block.noguichest.no_gui_dispenser": "no gui Dispenser",
+  "block.noguichest.no_gui_dispenser_item": "no gui Dispenser",
+  "block.noguichest.no_gui_dropper": "NGDropper",
+  "block.noguichest.no_gui_dropper_item": "NGDropper",
+
   "container.NGChest": "NGChest",
-  "container.NGChestDouble": "Large NGChest"
+  "container.NGChestDouble": "Large NGChest",
+  "container.NGHopper": "NGGopper",
+  "container.NGBrewing": "NGBrewing Stand",
+  "container.dispenser": "NGDispenser",
+  "container.dropper": "NGDropper",
+
+  "NoGuiChest": "No Gui Chest"
+
 }

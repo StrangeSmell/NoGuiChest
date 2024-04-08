@@ -1,4 +1,4 @@
-package com.strangesmell.noguichest;
+package com.strangesmell.noguichest.chest;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;

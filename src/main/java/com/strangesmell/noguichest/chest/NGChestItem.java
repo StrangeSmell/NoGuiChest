@@ -1,5 +1,6 @@
-package com.strangesmell.noguichest;
+package com.strangesmell.noguichest.chest;
 
+import com.strangesmell.noguichest.NoGuiChest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
@@ -24,7 +25,7 @@ public class NGChestItem extends BlockItem {
         consumer.accept(new IClientItemExtensions() {
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                Supplier<BlockEntity> modelToUse = ()->new NGChestEntity(BlockPos.ZERO,NoGuiChest.NGChest.get().defaultBlockState());
+                Supplier<BlockEntity> modelToUse = ()->new NGChestEntity(BlockPos.ZERO, NoGuiChest.NGChest.get().defaultBlockState());
 
                 return new NGChestItemStackRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels(), modelToUse);
 

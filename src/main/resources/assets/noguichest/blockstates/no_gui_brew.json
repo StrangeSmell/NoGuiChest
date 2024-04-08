@@ -1,0 +1,24 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "minecraft:block/brewing_stand"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/brewing_stand_empty0"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/brewing_stand_empty1"
+      }
+    },
+    {
+      "apply": {
+        "model": "minecraft:block/brewing_stand_empty2"
+      }
+    }
+  ]
+}

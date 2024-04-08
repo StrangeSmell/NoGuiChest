@@ -1,6 +1,21 @@
 {
   "block.noguichest.no_gui_chest": "沉浸箱子",
   "block.noguichest.no_gui_chest_item": "沉浸箱子",
+  "block.noguichest.no_gui_hopper": "沉浸漏斗",
+  "block.noguichest.no_gui_hopper_item": "沉浸漏斗",
+  "block.noguichest.no_gui_brew": "沉浸炼药台",
+  "block.noguichest.no_gui_brew_item": "沉浸炼药台",
+  "block.noguichest.no_gui_dispenser": "沉浸发射器",
+  "block.noguichest.no_gui_dispenser_item": "沉浸发射器",
+  "block.noguichest.no_gui_dropper": "沉浸投掷器",
+  "block.noguichest.no_gui_dropper_item": "沉浸投掷器",
+
   "container.NGChest": "沉浸箱子",
-  "container.NGChestDouble": "大型沉浸箱子"
+  "container.NGChestDouble": "大型沉浸箱子",
+  "container.NGHopper": "沉浸漏斗",
+  "container.NGBrewing": "沉浸酿造台",
+    "container.dispenser": "沉浸发射器",
+    "container.dropper": "沉浸投掷器",
+   "NoGuiChest": "沉浸箱子"
+
 }

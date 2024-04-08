@@ -1,8 +1,9 @@
-package com.strangesmell.noguichest;
+package com.strangesmell.noguichest.chest;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import com.strangesmell.noguichest.enderchest.NGEnderChestBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -22,18 +23,18 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.entity.LidBlockEntity;
+import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Calendar;
+
+import static net.minecraft.client.renderer.Sheets.ENDER_CHEST_LOCATION;
 
 @OnlyIn(Dist.CLIENT)
 public class NGChestRenderer<T extends BlockEntity & LidBlockEntity> implements BlockEntityRenderer<T> {
@@ -124,25 +125,21 @@ public class NGChestRenderer<T extends BlockEntity & LidBlockEntity> implements 
                             double dx =blockPos.getZ() +1- viewPose.get(Direction.Axis.Z)-onePix;
                             double dz =viewPose.get(Direction.Axis.X)-blockPos.getX()-onePix;
                             renderItem(f,f1,ngChestEntity,flag1,chesttype,pPoseStack,pBuffer,pPackedLight,pPackedOverlay,dx,dz);
-                            break;
                         }
                         case WEST -> {
                             double dx =viewPose.get(Direction.Axis.Z)-blockPos.getZ()-onePix;
                             double dz =blockPos.getX()+1-viewPose.get(Direction.Axis.X)-onePix;
                             renderItem(f,f1,ngChestEntity,flag1,chesttype,pPoseStack,pBuffer,pPackedLight,pPackedOverlay,dx,dz);
-                            break;
                         }
                         case SOUTH -> {
                             double dx =viewPose.get(Direction.Axis.X)-blockPos.getX()-onePix;
                             double dz =viewPose.get(Direction.Axis.Z)-blockPos.getZ()-onePix;
                             renderItem(f,f1,ngChestEntity,flag1,chesttype,pPoseStack,pBuffer,pPackedLight,pPackedOverlay,dx,dz);
-                            break;
                         }
                         case NORTH -> {
                             double dx =blockPos.getX()+1- viewPose.get(Direction.Axis.X)-onePix;
                             double dz =blockPos.getZ()+1-viewPose.get(Direction.Axis.Z)-onePix;
                             renderItem(f,f1,ngChestEntity,flag1,chesttype,pPoseStack,pBuffer,pPackedLight,pPackedOverlay,dx,dz);
-                            break;
                         }
                         default -> {}
                     }
@@ -153,11 +150,12 @@ public class NGChestRenderer<T extends BlockEntity & LidBlockEntity> implements 
     }
 
     private void renderItem(float f,float f1,  NGChestEntity ngChestEntity, boolean flag1 , ChestType chesttype , PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay,double dx,double dz){
-        boolean shouldBig = dx<0.875&&dz<0.875&&dx>=0.125&&dz>=0.125;
+        boolean shouldBig = dx<0.875&&dz<0.875&&dx>=0&&dz>=0;
         dx = (int)(dx/oneSlot);
         dz = (int)(dz/oneSlot);
         dz=dz*5;
         int index2 = (int)(dx+dz);
+        //shouldBig = shouldBig&&dx>=0&&dz>=0;
         NonNullList<ItemStack> itemStacks = ngChestEntity.getItems();
 
         pPoseStack.translate(0.5F, 0.5F, 0.5F);
@@ -171,20 +169,48 @@ public class NGChestRenderer<T extends BlockEntity & LidBlockEntity> implements 
         Minecraft minecraft = Minecraft.getInstance();
         for(int index = 0 ; index < 25 ; index++){
             ItemStack itemStack = itemStacks.get(index);
-            if(itemStack == ItemStack.EMPTY) continue;
+            if(itemStack == ItemStack.EMPTY) {
+                ngChestEntity.decreaseIndexCount(index);
+                continue;
+            }
             int row = index % 5;
             int line = index / 5;
             count = itemStack.getCount();
             pPoseStack.translate(-row,0,-line);
 
             pPoseStack.scale(f1,f1,f1);
-            //指向的item变大
+            Vec2 testVec = testRender(index,ngChestEntity);
+
             if(index==index2&&shouldBig){
-                pPoseStack.scale(1.25f,1.25f,1.25f);
-                this.itemRenderer.renderStatic(itemStack, ItemDisplayContext.FIXED, pPackedLight, pPackedOverlay, pPoseStack, pBuffer, ngChestEntity.getLevel(), index);
-                pPoseStack.scale(0.8f,0.8f,0.8f);
+                ngChestEntity.increaseIndexCount(index);
             }else {
+                ngChestEntity.decreaseIndexCount(index);
+            }
+
+            //指向的item变大
+            float x= testVec.x/30;
+            float y= testVec.y/30;
+            if(index==index2&&shouldBig){
+                pPoseStack.translate(-x*x*x/3,0,-y*y*y/3);
+
+                pPoseStack.scale(1.25f,1.25f,1.25f);
+                pPoseStack.translate(0,ngChestEntity.indexCount.get(index)/60,0);
                 this.itemRenderer.renderStatic(itemStack, ItemDisplayContext.FIXED, pPackedLight, pPackedOverlay, pPoseStack, pBuffer, ngChestEntity.getLevel(), index);
+                pPoseStack.translate(0,-ngChestEntity.indexCount.get(index)/60,0);
+                pPoseStack.scale(0.8f,0.8f,0.8f);
+                pPoseStack.translate(x*x*x/3,0,y*y*y/3);
+
+            }else {
+
+                    pPoseStack.translate(-x*x*x/3,0,-y*y*y/3);
+                    pPoseStack.translate(0,ngChestEntity.indexCount.get(index)/60,0);
+
+                this.itemRenderer.renderStatic(itemStack, ItemDisplayContext.FIXED, pPackedLight, pPackedOverlay, pPoseStack, pBuffer, ngChestEntity.getLevel(), index);
+
+                    pPoseStack.translate(0,-ngChestEntity.indexCount.get(index)/60,0);
+                    pPoseStack.translate(x*x*x/3,0,y*y*y/3);
+
+
             }
             pPoseStack.scale(1/f1,1/f1,1/f1);
 
@@ -193,6 +219,24 @@ public class NGChestRenderer<T extends BlockEntity & LidBlockEntity> implements 
             pPoseStack.translate(row,0,line);
         }
     }
+
+    public Vec2 testRender(int index,NGChestEntity ngChestEntity ){
+        float toRight=0 ,toLeft=0,toDown=0,toUp =0;
+        if(index%5!=0){//左边有物品
+             toRight = ngChestEntity.indexCount.get(index-1);
+        }
+        if(index%5!=4){//右边有物品
+            toLeft = - ngChestEntity.indexCount.get(index+1);
+        }
+        if((index-5)>=0){//上面有物品
+             toDown =ngChestEntity.indexCount.get(index-5);
+        }
+        if((index+5)<=24){//下面有物品
+             toUp = - ngChestEntity.indexCount.get(index+5);
+        }
+        return new Vec2(toLeft+toRight,toDown+toUp);
+    }
+
     //先这样吧
     public void renderCount(PoseStack pPoseStack,Minecraft minecraft,String text,MultiBufferSource pBuffer, int pPackedLight){
         pPoseStack.translate(0.5F, 0.5F, 0.5F);

@@ -1,5 +1,6 @@
-package com.strangesmell.noguichest;
+package com.strangesmell.noguichest.brewing;
 
+import com.strangesmell.noguichest.channel.ClientPacketHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,14 +11,12 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class S2CMassage {
-    private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
+public class S2CMessageBrewing {
+    private NonNullList<ItemStack> items = NonNullList.withSize(5, ItemStack.EMPTY);
     private BlockPos blockPos ;
-    private boolean openState;
-    public S2CMassage(NonNullList<ItemStack> items,BlockPos blockPos,boolean openState) {
+    public S2CMessageBrewing(NonNullList<ItemStack> items, BlockPos blockPos) {
         this.blockPos=blockPos;
         this.items = items;
-        this.openState=openState;
     }
 
     public NonNullList<ItemStack> getItems(){
@@ -28,16 +27,12 @@ public class S2CMassage {
         return this.blockPos;
     }
 
-    public boolean getOpenState(){
-        return this.openState;
-    }
 
-    public S2CMassage(FriendlyByteBuf buf) {
+    public S2CMessageBrewing(FriendlyByteBuf buf) {
         blockPos=buf.readBlockPos();
         for(int i = 0 ; i < items.size() ; i++){
             items.set(i,buf.readItem());
         }
-        openState=buf.readBoolean();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
@@ -45,18 +40,15 @@ public class S2CMassage {
         for(int i = 0 ; i < items.size() ; i++){
             buf.writeItemStack(items.get(i),true);
         }
-        buf.writeBoolean(openState);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
             // 确保其仅在物理客户端上执行
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handlePacket(new S2CMassage(items,blockPos,openState), supplier));
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handlePacketBrew(new S2CMessageBrewing(items,blockPos), supplier));
         });
         context.setPacketHandled(true);
         return true;
     }
-
-
 }

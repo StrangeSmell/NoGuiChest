@@ -1,5 +1,7 @@
-package com.strangesmell.noguichest;
+package com.strangesmell.noguichest.chest;
 
+import com.strangesmell.noguichest.channel.Channel;
+import com.strangesmell.noguichest.NoGuiChest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -18,13 +20,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class NGChestEntity extends ChestBlockEntity implements LidBlockEntity {
     private boolean openState = false;
@@ -110,9 +113,7 @@ public class NGChestEntity extends ChestBlockEntity implements LidBlockEntity {
         assert this.level != null;
         if(level.isClientSide) return;
         //level.sendBlockUpdated(this.getBlockPos(),this.getBlockState(),this.getBlockState(),2);
-        Channel.sendToChunk(new S2CMassage(this.getItems(),this.getBlockPos(), this.getOpenState()),this.getLevel().getChunkAt(this.getBlockPos()));
-
-
+        Channel.sendToChunk(new S2CMessage(this.getItems(),this.getBlockPos(), this.getOpenState()),this.getLevel().getChunkAt(this.getBlockPos()));
     }
 
     public void recheckOpen() {
@@ -121,9 +122,6 @@ public class NGChestEntity extends ChestBlockEntity implements LidBlockEntity {
         }
 
     }
-
-
-
 
     public void startOpen(Player pPlayer) {
         if (!this.remove && !pPlayer.isSpectator()) {
@@ -204,9 +202,21 @@ public class NGChestEntity extends ChestBlockEntity implements LidBlockEntity {
             oldHandler.invalidate();
         }
     }
-
+    public Map<Integer, Float> indexCount = new HashMap<Integer, Float>();
+    public final float maxIndexCount = 30;
+    public void increaseIndexCount(int index){
+        if(indexCount.get(index)>=maxIndexCount) return;
+        indexCount.put(index, indexCount.get(index)+1);
+    }
+    public void decreaseIndexCount(int index){
+        if (indexCount.get(index)<=0) return;
+        indexCount.put(index, indexCount.get(index)-1);
+    }
     public NGChestEntity(BlockPos pPos, BlockState pBlockState) {
         super(NoGuiChest.NGChestEntity.get(), pPos, pBlockState);
+        for(int index = 0; index < 25 ; index++){
+            indexCount.put(index,0f);
+        }
     }
     protected Component getDefaultName() {
         NonNullList<ItemStack> items=null;
@@ -240,7 +250,7 @@ public class NGChestEntity extends ChestBlockEntity implements LidBlockEntity {
         return this.items;
     }
 
-    protected void setItems(NonNullList<ItemStack> pItems) {
+    public void setItems(NonNullList<ItemStack> pItems) {
         this.items = pItems;
     }
 

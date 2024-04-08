@@ -1,6 +1,7 @@
-package com.strangesmell.noguichest;
+package com.strangesmell.noguichest.chest;
 
-import net.minecraft.client.Minecraft;
+import com.strangesmell.noguichest.channel.Channel;
+import com.strangesmell.noguichest.NoGuiChest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
@@ -202,17 +204,17 @@ public class NGChest extends ChestBlock implements SimpleWaterloggedBlock  {
         if (!useItemStack.isEmpty()&&chestItemStack.isEmpty()) {
             ngChestEntity.getItems().set(index,useItemStack);
             player.setItemInHand(pHand,new ItemStack(Items.AIR));
-            Channel.sendToChunk(new S2CMassage(ngChestEntity.getItems(),ngChestEntity.getBlockPos(), ngChestEntity.getOpenState()),ngChestEntity.getLevel().getChunkAt(ngChestEntity.getBlockPos()));
+            Channel.sendToChunk(new S2CMessage(ngChestEntity.getItems(),ngChestEntity.getBlockPos(), ngChestEntity.getOpenState()),ngChestEntity.getLevel().getChunkAt(ngChestEntity.getBlockPos()));
         }
         if (useItemStack.isEmpty()&&!chestItemStack.isEmpty()) {
             player.setItemInHand(pHand,chestItemStack);
             ngChestEntity.getItems().set(index,new ItemStack(Items.AIR));
-            Channel.sendToChunk(new S2CMassage(ngChestEntity.getItems(),ngChestEntity.getBlockPos(), ngChestEntity.getOpenState()),ngChestEntity.getLevel().getChunkAt(ngChestEntity.getBlockPos()));
+            Channel.sendToChunk(new S2CMessage(ngChestEntity.getItems(),ngChestEntity.getBlockPos(), ngChestEntity.getOpenState()),ngChestEntity.getLevel().getChunkAt(ngChestEntity.getBlockPos()));
         }
         if (!useItemStack.isEmpty()&&!chestItemStack.isEmpty()) {
             ngChestEntity.getItems().set(index,useItemStack);
             player.setItemInHand(pHand, chestItemStack);
-            Channel.sendToChunk(new S2CMassage(ngChestEntity.getItems(),ngChestEntity.getBlockPos(), ngChestEntity.getOpenState()),ngChestEntity.getLevel().getChunkAt(ngChestEntity.getBlockPos()));
+            Channel.sendToChunk(new S2CMessage(ngChestEntity.getItems(),ngChestEntity.getBlockPos(), ngChestEntity.getOpenState()),ngChestEntity.getLevel().getChunkAt(ngChestEntity.getBlockPos()));
         }
 
     }
@@ -354,6 +356,9 @@ public class NGChest extends ChestBlock implements SimpleWaterloggedBlock  {
 
     }
 
+    public BlockEntityType<? extends ChestBlockEntity> blockEntityType() {
+        return this.blockEntityType.get();
+    }
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
