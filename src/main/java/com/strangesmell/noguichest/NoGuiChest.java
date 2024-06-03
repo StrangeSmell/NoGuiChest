@@ -33,6 +33,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -90,7 +91,10 @@ public class NoGuiChest
         BLOCK_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         CREATIVE_MODE_TABS.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
-        modEventBus.addListener(this::clientSetup);
+        if(FMLEnvironment.dist==Dist.CLIENT) {
+            modEventBus.addListener(this::clientSetup);
+
+        }
         Channel.register();
     }
 

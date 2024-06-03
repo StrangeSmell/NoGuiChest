@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -83,6 +84,20 @@ public class NGDropperBlockEntity extends NGDispenserEntity {
             ContainerHelper.loadAllItems(p_155496_, this.items);
         }
 
+    }
+
+    public int getRandomSlot(RandomSource p_222762_) {
+        this.unpackLootTable((Player)null);
+        int i = -1;
+        int j = 1;
+
+        for(int k = 0; k < this.items.size(); ++k) {
+            if (!this.items.get(k).isEmpty() && p_222762_.nextInt(j++) == 0) {
+                i = k;
+            }
+        }
+
+        return i;
     }
 
     protected void saveAdditional(CompoundTag p_187498_) {

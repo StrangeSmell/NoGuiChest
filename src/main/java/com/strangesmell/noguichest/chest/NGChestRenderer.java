@@ -156,6 +156,10 @@ public class NGChestRenderer<T extends BlockEntity & LidBlockEntity> implements 
         dz=dz*5;
         int index2 = (int)(dx+dz);
         //shouldBig = shouldBig&&dx>=0&&dz>=0;
+        if(ngChestEntity.getItems()==null) {
+
+            return;
+        }
         NonNullList<ItemStack> itemStacks = ngChestEntity.getItems();
 
         pPoseStack.translate(0.5F, 0.5F, 0.5F);
@@ -179,7 +183,7 @@ public class NGChestRenderer<T extends BlockEntity & LidBlockEntity> implements 
             pPoseStack.translate(-row,0,-line);
 
             pPoseStack.scale(f1,f1,f1);
-            Vec2 testVec = testRender(index,ngChestEntity);
+            Vec2 testVec = animationCalculation(index,ngChestEntity);
 
             if(index==index2&&shouldBig){
                 ngChestEntity.increaseIndexCount(index);
@@ -220,7 +224,7 @@ public class NGChestRenderer<T extends BlockEntity & LidBlockEntity> implements 
         }
     }
 
-    public Vec2 testRender(int index,NGChestEntity ngChestEntity ){
+    public Vec2 animationCalculation(int index,NGChestEntity ngChestEntity ){
         float toRight=0 ,toLeft=0,toDown=0,toUp =0;
         if(index%5!=0){//左边有物品
              toRight = ngChestEntity.indexCount.get(index-1);

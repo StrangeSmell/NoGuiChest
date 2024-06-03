@@ -2,11 +2,13 @@ package com.strangesmell.noguichest.chest;
 
 import com.strangesmell.noguichest.channel.Channel;
 import com.strangesmell.noguichest.NoGuiChest;
+import com.strangesmell.noguichest.channel.Issues4Message;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
@@ -36,6 +38,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -67,9 +70,22 @@ public class NGChest extends ChestBlock implements SimpleWaterloggedBlock  {
 
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos blockPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pLevel.isClientSide) {
+
+            //tried to fix issues#4
+            NGChestEntity ngChestEntity = (NGChestEntity) pLevel.getBlockEntity(blockPos);
+            if(ngChestEntity.getItems() == null){
+                Channel.sendToServer(new Issues4Message(blockPos));
+            }
+            //end
+
+
             return InteractionResult.SUCCESS;
+
         } else {
             NGChestEntity ngChestEntity = (NGChestEntity) pLevel.getBlockEntity(blockPos);
+
+
+
             Direction face = ngChestEntity.getBlockState().getValue(NGChest.FACING);
             Direction hitFace = pHit.getDirection();
             Vec3 viewPose = pHit.getLocation();
@@ -88,6 +104,7 @@ public class NGChest extends ChestBlock implements SimpleWaterloggedBlock  {
                     MenuProvider menuprovider = this.getMenuProvider(pState, pLevel, blockPos);
                     if (menuprovider != null) {
                         pPlayer.openMenu(menuprovider);
+                        //NetworkHooks.openScreen((ServerPlayer) pPlayer,ngChestEntity,blockPos );
                         pPlayer.awardStat(this.getOpenChestStat());
                         PiglinAi.angerNearbyPiglins(pPlayer, true);
                     }

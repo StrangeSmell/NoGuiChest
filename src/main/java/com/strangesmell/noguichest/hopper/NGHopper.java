@@ -2,6 +2,8 @@ package com.strangesmell.noguichest.hopper;
 
 import com.strangesmell.noguichest.NoGuiChest;
 import com.strangesmell.noguichest.channel.Channel;
+import com.strangesmell.noguichest.channel.Issues4Message;
+import com.strangesmell.noguichest.dropper.NGDropperBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.stats.Stats;
@@ -126,6 +128,12 @@ public class NGHopper extends HopperBlock {
     private static double onePix =0.0625;
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos blockPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pLevel.isClientSide) {
+            //tried to fix issues#4
+            NGHopperBlockEntity blockEntity = (NGHopperBlockEntity) pLevel.getBlockEntity(blockPos);
+            if(blockEntity.getItems() == null){
+                Channel.sendToServer(new Issues4Message(blockPos));
+            }
+            //end
             return InteractionResult.SUCCESS;
         } else {
             BlockEntity blockentity = pLevel.getBlockEntity(blockPos);
@@ -148,7 +156,16 @@ public class NGHopper extends HopperBlock {
     }
 
     public static void setItem(int index, Player player, InteractionHand pHand, NGHopperBlockEntity blockEntity ){
-
+        switch (index){
+            case 0->index = 0;
+            case 2->index = 1;
+            case 4->index = 2;
+            case 6->index = 3;
+            case 8->index = 4;
+            default -> {
+                return;
+            }
+        }
         ItemStack useItemStack = player.getItemInHand(pHand);
         ItemStack chestItemStack = blockEntity.getItems().get(index);
 

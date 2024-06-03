@@ -1,5 +1,7 @@
 package com.strangesmell.noguichest.dropper;
 
+import com.strangesmell.noguichest.channel.Channel;
+import com.strangesmell.noguichest.channel.Issues4Message;
 import com.strangesmell.noguichest.dispenser.NGDispenser;
 import com.strangesmell.noguichest.dispenser.NGDispenserEntity;
 import net.minecraft.core.BlockPos;

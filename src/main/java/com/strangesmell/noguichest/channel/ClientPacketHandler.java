@@ -76,4 +76,11 @@ public class ClientPacketHandler {
             player.getEnderChestInventory().setItem(index,msg.getItems().get(index));
         }
     }
+
+    public static void handlePacket(Issues4Message msg, Supplier<NetworkEvent.Context> ctx) {
+        BlockEntity blockEntity = ctx.get().getSender().level().getBlockEntity(msg.getBlockPos());
+        if(blockEntity instanceof NGChestEntity ngChestEntity){
+            ngChestEntity.setChanged();
+        }
+    }
 }

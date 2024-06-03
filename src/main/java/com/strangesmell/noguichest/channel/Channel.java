@@ -66,6 +66,11 @@ public class Channel {
                 .encoder(S2CMessageEnder::toBytes)
                 .consumerMainThread(S2CMessageEnder::handle)
                 .add();
+        net.messageBuilder(Issues4Message.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(Issues4Message::new)
+                .encoder(Issues4Message::toBytes)
+                .consumerMainThread(Issues4Message::handle)
+                .add();
 
 
     }

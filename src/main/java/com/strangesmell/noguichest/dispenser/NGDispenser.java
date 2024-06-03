@@ -1,6 +1,8 @@
 package com.strangesmell.noguichest.dispenser;
 
 import com.strangesmell.noguichest.channel.Channel;
+import com.strangesmell.noguichest.channel.Issues4Message;
+import com.strangesmell.noguichest.chest.NGChestEntity;
 import com.strangesmell.noguichest.dropper.NGDropperBlockEntity;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.Util;

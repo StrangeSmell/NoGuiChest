@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.state.properties.ChestType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NGChestEntity extends ChestBlockEntity implements LidBlockEntity {
+public class NGChestEntity extends ChestBlockEntity  {
     private boolean openState = false;
     public void difOpenStateSingle(){
         openState= !openState;
@@ -72,6 +72,7 @@ public class NGChestEntity extends ChestBlockEntity implements LidBlockEntity {
     public void setOpenState(boolean openState){
         this.openState=openState;
     }
+
     public boolean getOpenState(){
         return this.openState;
     }
